@@ -1,8 +1,10 @@
 package com.example.myapplication.AppData
 
+import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-class User(
+@Entity
+class Userr(
     @PrimaryKey(autoGenerate = true)
     var id:Int = 0,
     var user_name:String,

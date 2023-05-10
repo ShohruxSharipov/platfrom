@@ -5,6 +5,11 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
+import android.widget.Toast
+import com.example.myapplication.AppData.AppDatabase
+import com.example.myapplication.AppData.Userr
+import com.example.myapplication.databinding.FragmentRegistrationBinding
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -17,10 +22,11 @@ private const val ARG_PARAM2 = "param2"
  * create an instance of this fragment.
  */
 class RegistrationFragment : Fragment() {
-    // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
-
+    val appDatabase: AppDatabase by lazy {
+        AppDatabase.getInstanse(requireContext())
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -33,20 +39,31 @@ class RegistrationFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_registration, container, false)
+        val binding = FragmentRegistrationBinding.inflate(inflater, container, false)
+        val list = mutableListOf("Select role", "Teacher", "Student")
+        val adapter =
+            ArrayAdapter<String>(requireContext(), android.R.layout.simple_spinner_item, list)
+        binding.spinner.adapter = adapter
+
+        binding.next2.setOnClickListener {
+            val name = binding.userName.text.toString()
+            val login = binding.userLog.text.toString()
+            val password = binding.userPass.text.toString()
+            val role = if (binding.spinner.selectedItem.toString() == "Teacher") {
+                true
+            } else false
+
+            if (name.isEmpty() || login.isEmpty() || password.isEmpty()){
+                Toast.makeText(requireContext(), "Please Fill All", Toast.LENGTH_SHORT).show()
+            }else{
+                appDatabase.getUserDao().addUser(Userr(user_name = name, user_login = login, user_password = password, role = role))
+                parentFragmentManager.beginTransaction().replace(R.id.mainACtivity,LoginFragment()).commit()
+            }
+        }
+        return binding.root
     }
 
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment RegistrationFragment.
-         */
-        // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
             RegistrationFragment().apply {

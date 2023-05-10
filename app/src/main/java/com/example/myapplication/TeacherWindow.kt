@@ -5,9 +5,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import android.widget.ArrayAdapter
 import com.example.myapplication.AppData.AppDatabase
-import com.example.myapplication.databinding.FragmentLoginBinding
+import com.example.myapplication.databinding.FragmentTeacherWindowBinding
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -16,16 +16,16 @@ private const val ARG_PARAM2 = "param2"
 
 /**
  * A simple [Fragment] subclass.
- * Use the [LoginFragment.newInstance] factory method to
+ * Use the [TeacherWindow.newInstance] factory method to
  * create an instance of this fragment.
  */
-class LoginFragment : Fragment() {
+class TeacherWindow : Fragment() {
+    // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
-        val appDatabase:AppDatabase by lazy {
-            AppDatabase.getInstanse(requireContext())
-        }
-
+    val appDatabase: AppDatabase by lazy {
+        AppDatabase.getInstanse(requireContext())
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -38,33 +38,28 @@ class LoginFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val binding = FragmentLoginBinding.inflate(inflater,container,false)
-
-
-        binding.next.setOnClickListener {
-            var login = binding.userLogin.text.toString()
-            var password = binding.userPassword.text.toString()
-            val user = appDatabase.getUserDao().getUser(login,password)
-
-            if (user == null){
-                Toast.makeText(requireContext(), "Register first", Toast.LENGTH_SHORT).show()
-            }else if (user.role == true){
-                parentFragmentManager.beginTransaction().replace(R.id.mainACtivity,TeacherWindow()).commit()
-            }else Toast.makeText(requireContext(), "STUDENT", Toast.LENGTH_SHORT).show()
-        }
-
-        binding.register.setOnClickListener {
-            parentFragmentManager.beginTransaction().replace(R.id.mainACtivity,RegistrationFragment()).commit()
-        }
+        val binding = FragmentTeacherWindowBinding.inflate(inflater,container,false)
+        val list = appDatabase.getUserDao().getUsersName()
+        val adapter = ArrayAdapter(requireContext(),android.R.layout.simple_list_item_1,list)
+        binding.students.adapter = adapter
 
 
         return binding.root
     }
 
     companion object {
+        /**
+         * Use this factory method to create a new instance of
+         * this fragment using the provided parameters.
+         *
+         * @param param1 Parameter 1.
+         * @param param2 Parameter 2.
+         * @return A new instance of fragment TeacherWindow.
+         */
+        // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
-            LoginFragment().apply {
+            TeacherWindow().apply {
                 arguments = Bundle().apply {
                     putString(ARG_PARAM1, param1)
                     putString(ARG_PARAM2, param2)

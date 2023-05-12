@@ -8,7 +8,8 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import com.example.myapplication.AppData.AppDatabase
-import com.example.myapplication.AppData.Userr
+import com.example.myapplication.AppData.Entity.Subject
+import com.example.myapplication.AppData.Entity.Userr
 import com.example.myapplication.databinding.FragmentRegistrationBinding
 
 // TODO: Rename parameter arguments, choose names that match
@@ -49,6 +50,18 @@ class RegistrationFragment : Fragment() {
             val name = binding.userName.text.toString()
             val login = binding.userLog.text.toString()
             val password = binding.userPass.text.toString()
+
+
+            appDatabase.getSubjectDao().addSubject(Subject(name = "Algebra"))
+            appDatabase.getSubjectDao().addSubject(Subject(name = "Geometriya"))
+            appDatabase.getSubjectDao().addSubject(Subject(name = "Fizika"))
+            appDatabase.getSubjectDao().addSubject(Subject(name = "Informatika"))
+            appDatabase.getSubjectDao().addSubject(Subject(name = "Musiqa"))
+            appDatabase.getSubjectDao().addSubject(Subject(name = "Jismoniy"))
+            appDatabase.getSubjectDao().addSubject(Subject(name = "Adabiyot"))
+
+
+
             val role = if (binding.spinner.selectedItem.toString() == "Teacher") {
                 true
             } else false
